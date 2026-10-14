@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16
+    container_name: agency-platform-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: agency_platform
+      POSTGRES_USER: agency_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - agency_platform_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agency_user -d agency_platform"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  agency_platform_db_data:
